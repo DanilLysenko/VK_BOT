@@ -3,3 +3,4 @@ settings.py
 venv
 *.log
 *.db
+*.pdf
