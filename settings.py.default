@@ -1,0 +1,105 @@
+# -*- coding: utf-8 -*-
+
+TOKEN = "Your VK token"
+GROUP_ID = 'Your VK group id'
+WEATHER_API_KEY = 'Your api key'  # https://openweathermap.org/api
+
+LIST_OF_POSIBILITIES = f'\nЯ могу:\n' \
+                       f'\n•Рассказать о погоде в выбранном вами городе России\n' \
+                       f'\n•Сообщить точное время и дату в любом городе мира\n' \
+                       f'\n•Зарегистрировать вас на конференцию'
+
+DEFAULT_ANSWER = f'Не знаю как на это ответить.\n{LIST_OF_POSIBILITIES}'
+
+INTENTS = [
+    {'name': 'Приветствие',
+     'token': ['прив', 'здравств', 'здрасьт'],
+     'scenario_name': None,
+     'answer': f'Привет!\n{LIST_OF_POSIBILITIES}',
+     },
+    {'name': 'Как дела?',
+     'token': ['как ты', 'как дела'],
+     'scenario_name': None,
+     'answer': 'У меня все хорошо, спасибо!',
+     },
+    {'name': 'Возможности бота?',
+     'token': ['можешь', 'умеешь'],
+     'scenario_name': None,
+     'answer': LIST_OF_POSIBILITIES
+     },
+    {'name': 'Погода',
+     'token': ['погод', 'температур', 'градус'],
+     'scenario_name': 'weather',
+     'answer': None,
+     },
+    {'name': 'Дата и время',
+     'token': ['врем', 'дата', 'число', 'час', 'день недели'],
+     'scenario_name': 'date',
+     'answer': None,
+     },
+    {'name': 'Регистрация',
+     'token': ['регистр', 'запиши', 'логин', 'конференц'],
+     'scenario_name': 'registration',
+     'answer': None,
+     },
+]
+SCENARIOS = {
+    'weather': {
+        'first_step': 'step_1',
+        'steps': {
+            'step_1': {
+                'text': "Введите название города России в формате: 'Москва'",
+                'failure_text': "Ошибка в веденном названии города, попробуйте ввести его еще раз, отдельным сообщением типа: 'Москва'",
+                'handler': 'weather_handler',
+                'next_step': 'step_2'
+            },
+            'step_2': {
+                'text': "В городе {city}\nТемпература {temp}°\nОщущается как {feels_like}°"
+                        "\nСкорость ветра {wind}\n{rain}\n{snow}",
+                'failure_text': None,
+                'handler': None,
+                'next_step': None
+            },
+        }
+    },
+    'date': {
+        'first_step': 'step_1',
+        'steps': {
+            'step_1': {
+                'text': "Введите название страны/региона/города в формате: 'Токио'",
+                'failure_text': "Ошибка в веденном названии города, попробуйте еще раз в формате: 'Токио'",
+                'handler': 'date_handler',
+                'next_step': 'step_2'
+            },
+            'step_2': {
+                'text': "В городе {place} местное время {time}\n{weekday}\n{day} {month} {year} год",
+                'failure_text': None,
+                'handler': None,
+                'next_step': None
+            },
+        }
+    },
+    'registration': {
+        'first_step': 'step_1',
+        'steps': {
+            'step_1': {
+                'text': "Введите ваше имя",
+                'failure_text': 'Ошибка в веденном имени, уложитесь в формат 3-40 символов',
+                'handler': 'name_handler',
+                'next_step': 'step_2'
+            },
+            'step_2': {
+                'text': "Введите ваш email",
+                'failure_text': 'Ошибка в веденном email, попробуйте ещё раз',
+                'handler': 'email_handler',
+                'next_step': 'step_3'
+            },
+            'step_3': {
+                'text': "{name}, Вы успешно зарегистрированы, информация о мероприятии и билет отправлены на вашу почту {email}",
+                'failure_text': None,
+                'handler': None,
+                'next_step': None
+            },
+        }
+    }
+}
