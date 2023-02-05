@@ -4,8 +4,8 @@ import logging
 from random import randint
 from vk_api import VkApi
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType, VkBotMessageEvent
-from models import *
-import handlers
+
+from services import *
 
 try:
     from settings import *
@@ -35,7 +35,7 @@ class Bot:
     """
     Сценарный бот для группы VK
 
-    Для имплементации новых сценариев нужно:
+    Имплементация новых сценариев:
     •Добавить сценарное дерево в settings.SCENARIOS
     •Создать новый словарь в setting.INTENTS для поиска токенов в сообщении пользователя для начала сценария
     •Создать handler в handlers.py для каждого шага сценария, где есть проверка
@@ -67,7 +67,7 @@ class Bot:
                 text_to_send = self.on_message_new(event)
                 self.send_text(user_id=user_id, text_to_send=text_to_send)
             else:
-                logger.info(f'Не имплементирована функция обработки - {event.type}')
+                logger.info(f'{event.type}')
 
     @db_session
     def on_message_new(self, event: VkBotMessageEvent):

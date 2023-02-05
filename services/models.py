@@ -24,5 +24,5 @@ class Registration(db.Entity):
 
 
 
-db.bind(provider='sqlite', filename='vk_bot.db', create_db=True)
+db.bind(provider='sqlite', filename='../vk_bot.db', create_db=True)
 db.generate_mapping(create_tables=True)

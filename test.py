@@ -1,7 +1,7 @@
 import unittest
-from copy import deepcopy
 from unittest.mock import Mock, patch
-from models import *
+from copy import deepcopy
+from services import Person
 from settings import INTENTS, SCENARIOS, DEFAULT_ANSWER
 from Bot import Bot
 from vk_api.bot_longpoll import VkBotMessageEvent
@@ -80,11 +80,11 @@ class TestBot(unittest.TestCase):
             bot.vk_api = self.api_mock
             bot.run()
 
-        real_outputs = []
+        real_output = []
         for arg, kwarg in self.send_mock.call_args_list:
-            real_outputs.append(kwarg['message'])
+            real_output.append(kwarg['message'])
 
-        assert EXPECTED_OUTPUTS[:4] == real_outputs
+        assert EXPECTED_OUTPUTS[:4] == real_output
 
     @db_isolate
     def test_weather(self):
@@ -98,7 +98,7 @@ class TestBot(unittest.TestCase):
 
         test_person = Person(user_id=12312445, scenario_name='weather', step_name='step_1', context=CONTEXT)
         with patch('Bot.Person.get', return_value=test_person):
-            with patch('handlers.weather_handler', return_value=True):
+            with patch('services.handlers.weather_handler', return_value=True):
                 with patch('Bot.VkBotLongPoll', return_value=self.long_poller_mock):
                     bot = Bot('', '')
                     bot.vk_api = self.api_mock
@@ -106,7 +106,6 @@ class TestBot(unittest.TestCase):
 
         for arg, kwarg in self.send_mock.call_args_list:
             real_output = kwarg['message']
-
         assert EXPECTED_OUTPUTS[4] == real_output
 
     @db_isolate
@@ -121,7 +120,7 @@ class TestBot(unittest.TestCase):
 
         test_person = Person(user_id=12312445, scenario_name='date', step_name='step_1', context=CONTEXT)
         with patch('Bot.Person.get', return_value=test_person):
-            with patch('handlers.date_handler', return_value=True):
+            with patch('services.handlers.date_handler', return_value=True):
                 with patch('Bot.VkBotLongPoll', return_value=self.long_poller_mock):
                     bot = Bot('', '')
                     bot.vk_api = self.api_mock
@@ -129,7 +128,6 @@ class TestBot(unittest.TestCase):
 
         for arg, kwarg in self.send_mock.call_args_list:
             real_output = kwarg['message']
-
         assert EXPECTED_OUTPUTS[5] == real_output
 
     @db_isolate
